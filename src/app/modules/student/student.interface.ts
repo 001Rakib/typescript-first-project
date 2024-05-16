@@ -1,5 +1,5 @@
 import { Schema, model, connect } from 'mongoose';
-
+// step-1: Create a interface
 export type Guardian = {
   fatherName: string;
   fatherOccupation: string;
@@ -25,7 +25,7 @@ export type Student = {
   id: string;
   name: UserName;
   gender: 'male' | 'female';
-  dateOfBirth: string;
+  dateOfBirth?: string;
   email: string;
   contactNumber: string;
   emergencyContactNumber: string;
