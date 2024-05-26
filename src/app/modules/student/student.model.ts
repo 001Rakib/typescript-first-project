@@ -11,25 +11,13 @@ const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: [true, 'First name is required'],
-    maxlength: [20, 'First Name can not be more than 20 character'],
     trim: true,
-    // validate: {
-    //   validator: function (value: string) {
-    //     const firstNameString = value.charAt(0).toUpperCase() + value.slice(1);
-    //     return firstNameString === value;
-    //   },
-    //   message: '{VALUE} is not in capitalized format',
-    // },
   },
   middleName: { type: String, trim: true },
   lastName: {
     type: String,
     required: [true, 'Last name is required'],
     trim: true,
-    // validate: {
-    //   validator: (value: string) => validator.isAlpha(value),
-    //   message: '{VALUE} is not valid',
-    // },
   },
 });
 
@@ -130,6 +118,7 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     type: localGuardianSchema,
     required: [true, 'Local guardian information is required'],
   },
+  admissionSemester: { type: Schema.Types.ObjectId, ref: 'AcademicSemester' },
   profileImage: { type: String },
   isDeleted: {
     type: Boolean,
