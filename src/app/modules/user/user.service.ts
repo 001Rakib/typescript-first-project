@@ -25,7 +25,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     payload.admissionSemester,
   );
 
-  const session = mongoose.startSession();
+  const session = await mongoose.startSession();
 
   try {
     //start the session
