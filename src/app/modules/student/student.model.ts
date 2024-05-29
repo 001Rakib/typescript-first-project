@@ -24,7 +24,6 @@ const userNameSchema = new Schema<TUserName>({
 const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
-    maxlength: [20, 'Name can not be more than 20'],
     required: [true, "Father's name is required"],
     trim: true,
   },
