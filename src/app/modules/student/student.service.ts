@@ -4,38 +4,84 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 import { TStudent } from './student.interface';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { studentsSearchableFields } from './student.constant';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  let searchTerm = '';
+  //raw method
+  // let searchTerm = '';
+  // const studentsSearchableFields = [
+  //   'email',
+  //   'name.firstName',
+  //   'presentAddress',
+  // ];
+  // if (query?.searchTerm) {
+  //   searchTerm = query?.searchTerm as string;
+  // }
+  // const queryObj = { ...query };
+  // //filtering
+  // const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+  // excludeFields.forEach((elem) => delete queryObj[elem]);
+  // const searchQuery = Student.find({
+  //   $or: studentsSearchableFields.map((field) => ({
+  //     [field]: { $regex: searchTerm, $options: 'i' },
+  //   })),
+  // });
+  // const filterQuery = searchQuery
+  //   .find(queryObj)
+  //   .populate('admissionSemester')
+  //   .populate({
+  //     path: 'academicDepartment',
+  //     populate: {
+  //       path: 'academicFaculty',
+  //     },
+  //   });
+  // let sort = '-createdAt';
+  // if (query.sort) {
+  //   sort = query.sort as string;
+  // }
+  // const sortQuery = filterQuery.sort(sort);
+  // let page = 1;
+  // let limit = 0;
+  // let skip = 0;
+  // if (query.limit) {
+  //   limit = Number(query.limit);
+  // }
+  // if (query.page) {
+  //   page = Number(query.limit);
+  //   skip = page - 1 * limit;
+  // }
+  // const paginateQuery = sortQuery.skip(skip);
+  // const limitQuery = paginateQuery.limit(limit);
+  //   //field limiting
+  //   let fields = '-__v';
+  //   if (query.fields) {
+  //     fields = (query.fields as string).split(',').join(' ');
+  //   }
+  //   const fieldQuery = await limitQuery.select(fields);
+  //   return fieldQuery;
+  // };
+  // const getSingleStudentFromDB = async (id: string) => {
+  //   const result = await Student.findOne({ id })
+  //     .populate('admissionSemester')
+  //     .populate({
+  //       path: 'academicDepartment',
+  //       populate: {
+  //         path: 'academicFaculty',
+  //       },
+  //     });
+  //   // const result = await Student.aggregate([{ $match: { id: id } }]);
+  //   return result;
 
-  if (query?.searchTerm) {
-    searchTerm = query?.searchTerm as string;
-  }
+  //with query builder
+  const studentQuery = new QueryBuilder(Student.find(), query)
+    .search(studentsSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  const result = await Student.find({
-    $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
-      [field]: { $regex: searchTerm, $options: 'i' },
-    })),
-  })
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
-  return result;
-};
-const getSingleStudentFromDB = async (id: string) => {
-  const result = await Student.findOne({ id })
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
-  // const result = await Student.aggregate([{ $match: { id: id } }]);
+  const result = await studentQuery.modelQuery;
   return result;
 };
 
@@ -111,7 +157,7 @@ const deleteStudentFromDB = async (id: string) => {
 
 export const studentServices = {
   getAllStudentsFromDB,
-  getSingleStudentFromDB,
+  // getSingleStudentFromDB,
   deleteStudentFromDB,
   updateStudentIntoDB,
 };

@@ -65,69 +65,74 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 });
 
 // step-2: Create a schema
-const studentSchema = new Schema<TStudent, StudentModel>({
-  id: { type: String, required: [true, 'ID is required'], unique: true },
-  user: {
-    type: Schema.Types.ObjectId,
-    required: [true, 'User ID is required'],
-    unique: true,
-    ref: 'User',
-  },
-  name: { type: userNameSchema, required: [true, 'Name is required'] },
-  gender: {
-    type: String,
-    enum: {
-      values: ['male', 'female', 'other'],
-      message: 'Gender must be one of male, female, or other',
+const studentSchema = new Schema<TStudent, StudentModel>(
+  {
+    id: { type: String, required: [true, 'ID is required'], unique: true },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User ID is required'],
+      unique: true,
+      ref: 'User',
     },
-    required: [true, 'Gender is required'],
+    name: { type: userNameSchema, required: [true, 'Name is required'] },
+    gender: {
+      type: String,
+      enum: {
+        values: ['male', 'female', 'other'],
+        message: 'Gender must be one of male, female, or other',
+      },
+      required: [true, 'Gender is required'],
+    },
+    dateOfBirth: { type: Date },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+    },
+    contactNumber: {
+      type: String,
+      required: [true, 'Contact number is required'],
+    },
+    emergencyContactNumber: {
+      type: String,
+      required: [true, 'Emergency contact number is required'],
+    },
+    bloodGroup: {
+      type: String,
+      enum: ['A', 'AB', 'B', 'O'],
+      required: [true, 'Blood group is required'],
+    },
+    presentAddress: {
+      type: String,
+      required: [true, 'Present address is required'],
+    },
+    permanentAddress: {
+      type: String,
+      required: [true, 'Permanent address is required'],
+    },
+    guardian: {
+      type: guardianSchema,
+      required: [true, 'Guardian information is required'],
+    },
+    localGuardian: {
+      type: localGuardianSchema,
+      required: [true, 'Local guardian information is required'],
+    },
+    admissionSemester: { type: Schema.Types.ObjectId, ref: 'AcademicSemester' },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
+    },
+    profileImage: { type: String },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  dateOfBirth: { type: Date },
-  email: {
-    type: String,
-    required: [true, 'Email is required'],
-    unique: true,
+  {
+    timestamps: true,
   },
-  contactNumber: {
-    type: String,
-    required: [true, 'Contact number is required'],
-  },
-  emergencyContactNumber: {
-    type: String,
-    required: [true, 'Emergency contact number is required'],
-  },
-  bloodGroup: {
-    type: String,
-    enum: ['A', 'AB', 'B', 'O'],
-    required: [true, 'Blood group is required'],
-  },
-  presentAddress: {
-    type: String,
-    required: [true, 'Present address is required'],
-  },
-  permanentAddress: {
-    type: String,
-    required: [true, 'Permanent address is required'],
-  },
-  guardian: {
-    type: guardianSchema,
-    required: [true, 'Guardian information is required'],
-  },
-  localGuardian: {
-    type: localGuardianSchema,
-    required: [true, 'Local guardian information is required'],
-  },
-  admissionSemester: { type: Schema.Types.ObjectId, ref: 'AcademicSemester' },
-  academicDepartment: {
-    type: Schema.Types.ObjectId,
-    ref: 'AcademicDepartment',
-  },
-  profileImage: { type: String },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
-});
+);
 
 //document middleware
 //pre save middleware / hook
