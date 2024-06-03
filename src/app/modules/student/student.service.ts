@@ -74,14 +74,35 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
   //   return result;
 
   //with query builder
-  const studentQuery = new QueryBuilder(Student.find(), query)
+  const studentQuery = new QueryBuilder(
+    Student.find()
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
+      }),
+    query,
+  )
     .search(studentsSearchableFields)
     .filter()
     .sort()
     .paginate()
     .fields();
-
   const result = await studentQuery.modelQuery;
+  return result;
+};
+
+const getSingleStudentFromDB = async (id: string) => {
+  const result = await Student.findOne({ id })
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
   return result;
 };
 
@@ -157,7 +178,7 @@ const deleteStudentFromDB = async (id: string) => {
 
 export const studentServices = {
   getAllStudentsFromDB,
-  // getSingleStudentFromDB,
+  getSingleStudentFromDB,
   deleteStudentFromDB,
   updateStudentIntoDB,
 };
