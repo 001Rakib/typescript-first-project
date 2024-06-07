@@ -1,11 +1,11 @@
 import { TSchedule } from './offeredCourse.interface';
 
-const hasTimeConflict = (
-  assignedSchedules: TSchedule,
+export const hasTimeConflict = (
+  assignedSchedules: TSchedule[],
   newSchedule: TSchedule,
 ) => {
   //check if new schedule is conflicting with the assigned schedule
-  assignedSchedules.forEach((schedule) => {
+  for (const schedule of assignedSchedules) {
     const existingStartTime = new Date(`05-04-2005T${schedule.startTime}`);
     const existingEndTime = new Date(`05-04-2005T${schedule.endTime}`);
 
@@ -15,6 +15,6 @@ const hasTimeConflict = (
     if (newStartTime < existingEndTime && newEndTime > existingStartTime) {
       return true;
     }
-  });
+  }
   return false;
 };

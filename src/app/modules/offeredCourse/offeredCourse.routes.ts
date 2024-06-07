@@ -17,12 +17,10 @@ router.post(
 //   SemesterRegistrationControllers.getSingleSemesterRegistration,
 // );
 
-// router.patch(
-//   '/:id',
-//   validateRequest(
-//     semesterRegistrationValidations.updateSemesterRegistrationValidationSchema,
-//   ),
-//   SemesterRegistrationControllers.updateSemesterRegistration,
-// );
+router.patch(
+  '/:id',
+  validateRequest(OfferedCourseValidations.updateOfferedCourseValidationSchema),
+  offeredCourseControllers.updateOfferedCourse,
+);
 
 export const offeredCourseRoutes = router;
