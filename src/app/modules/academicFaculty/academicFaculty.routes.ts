@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { academicFacultyControllers } from './academicFaculty.controllers';
 import validateRequest from '../../middlewares/validateRequest';
 import { academicFacultyValidations } from './academicFaculty.validation';
+import auth from '../../middlewares/auth';
+import { user_role } from '../user/user.constant';
 
 const router = Router();
 
@@ -12,7 +14,11 @@ router.post(
   ),
   academicFacultyControllers.createAcademicFaculty,
 );
-router.get('/', academicFacultyControllers.getAllAcademicFaculty);
+router.get(
+  '/',
+  auth(user_role.admin, user_role.faculty),
+  academicFacultyControllers.getAllAcademicFaculty,
+);
 router.get('/:facultyId', academicFacultyControllers.getSingleAcademicFaculty);
 router.patch(
   '/:facultyId',
