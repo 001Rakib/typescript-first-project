@@ -8,7 +8,7 @@ export const sendEmail = async (to: string, html: string) => {
     secure: config.node_env === 'production', // Use `true` for port 465, `false` for all other ports
     auth: {
       user: 'hasanaomit1234@gmail.com',
-      pass: 'lxfd dmxn iacc mtpd',
+      pass: config.smtp_pass,
     },
   });
   await transporter.sendMail({

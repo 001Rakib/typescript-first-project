@@ -44,12 +44,12 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
     if (
       userData.passwordChangedAt &&
-      User.isJWTIssuedBeforePasswordChange(
+      User.isJWTIssuedBeforePasswordChanged(
         userData.passwordChangedAt,
         iat as number,
       )
     ) {
-      throw new AppError(httpStatus.FORBIDDEN, 'The user is blocked');
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
     }
 
     if (requiredRoles && !requiredRoles.includes(role)) {

@@ -2,7 +2,6 @@ import { UserServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
-import AppError from '../../errors/AppError';
 
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
@@ -52,9 +51,23 @@ const getMe = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const changeStatus = catchAsync(async (req, res) => {
+  const id = req.params.id;
+
+  const result = await UserServices.changeStatus(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User status changes successfully',
+    data: result,
+  });
+});
 export const UserController = {
   createStudent,
   createAdmin,
   getMe,
   createFaculty,
+  changeStatus,
 };

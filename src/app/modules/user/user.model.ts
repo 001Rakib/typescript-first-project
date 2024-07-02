@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 import { TUser, UserModel } from './user.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
+import { user_status } from './user.constant';
 
 const userSchema = new Schema<TUser, UserModel>(
   {
@@ -33,7 +34,7 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     status: {
       type: String,
-      enum: ['in-progress', 'blocked'],
+      enum: user_status,
       default: 'in-progress',
     },
     isDeleted: {
@@ -74,14 +75,13 @@ userSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 
-userSchema.statics.isJWTIssuedBeforePasswordChange = async function (
-  passwordChangedTimeStamp: Date,
-  JwtIssuedTimeStamp: number,
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimestamp: Date,
+  jwtIssuedTimestamp: number,
 ) {
   const passwordChangedTime =
-    new Date(passwordChangedTimeStamp).getTime() / 1000;
-
-  return passwordChangedTime > JwtIssuedTimeStamp;
+    new Date(passwordChangedTimestamp).getTime() / 1000;
+  return passwordChangedTime > jwtIssuedTimestamp;
 };
 
 export const User = model<TUser, UserModel>('User', userSchema);
